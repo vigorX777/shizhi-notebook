@@ -1,0 +1,16 @@
+import type {Platform} from 'node:process';
+import type {SpawnSyncOptions,SpawnSyncReturns} from 'node:child_process';
+import type path from 'node:path';
+export const repositoryRoot:string;
+export const appVersion:string;
+export const machineConfig:string;
+export function loadMachineEnvironment():void;
+export function defaultDataRoot(platform?:Platform,env?:NodeJS.ProcessEnv,home?:string):string;
+export function sameDirectory(a:string,b:string):boolean;
+export function insideDirectory(file:string,root:string,p?:typeof path):boolean;
+export function findCodexCommand(options?:{platform?:Platform;env?:NodeJS.ProcessEnv;fileExists?:(file:string)=>boolean;node?:string}):{command:string;args:string[];binary:string};
+export function runPrisma(args:string[],options?:Omit<SpawnSyncOptions,'encoding'> & {encoding?:'utf8'}):SpawnSyncReturns<string>;
+export function quotePosix(value:string):string;
+export function quotePowerShell(value:string):string;
+export function encodedPowerShell(script:string):string;
+export function hookCommands(node:string,script:string):{command:string;commandWindows:string};

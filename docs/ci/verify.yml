@@ -1,0 +1,31 @@
+name: Verify macOS and Windows
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      SHIZHI_DATA_DIR: ${{ runner.temp }}/Shizhi 中文 data
+      SHIZHI_PORT: '47831'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.12.0'
+          cache: npm
+      - run: npm ci
+      - run: npm install -g @openai/codex@0.162.0
+      - run: npm run db:generate
+      - run: npm test
+      - run: npm run build
+      - run: npm run setup
+      - name: Fresh install and background service smoke
+        run: node --import tsx scripts/verify-install.ts

@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "sqlite"
+  url = env("DATABASE_URL")
+}
+model Source {
+  id String @id
+  ownerId String @default("local")
+  threadId String
+  turnId String
+  raw String @default("[]")
+  question String @default("")
+  answer String @default("")
+  status String @default("pending")
+  error String?
+  disposition String @default("pending")
+  repairRequested Boolean @default(false)
+  activityTracked Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  attachments Attachment[]
+  links NoteSource[]
+  activities LearningActivity[]
+  @@unique([threadId, turnId])
+}
+model Attachment {
+  id String @id
+  sourceId String
+  source Source @relation(fields:[sourceId], references:[id], onDelete:Cascade)
+  inputIndex Int
+  filename String
+  mime String
+  sha256 String
+  bytes Int
+  @@unique([sourceId,inputIndex])
+}
+model Note {
+  id String @id
+  ownerId String @default("local")
+  autoTitle String
+  autoSubject String @default("待分类")
+  autoTags String @default("[]")
+  kind String
+  question String
+  explanation String
+  questionNumber String?
+  manualTitle String?
+  manualSubject String?
+  manualTags String?
+  reflection String @default("")
+  wrong Boolean @default(false)
+  wrongReason String @default("")
+  mastery String @default("unmarked")
+  highlights String @default("[]")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sources NoteSource[]
+  activities LearningActivity[]
+}
+model LearningActivity {
+  id String @id
+  ownerId String @default("local")
+  kind String
+  sourceId String?
+  source Source? @relation(fields:[sourceId], references:[id], onDelete:Cascade)
+  noteId String?
+  note Note? @relation(fields:[noteId], references:[id], onDelete:Cascade)
+  occurredAt DateTime @default(now())
+  @@index([ownerId,occurredAt])
+}
+model NoteSource {
+  noteId String
+  sourceId String
+  note Note @relation(fields:[noteId], references:[id], onDelete:Cascade)
+  source Source @relation(fields:[sourceId], references:[id], onDelete:Cascade)
+  itemKey String
+  explanation String
+  question String
+  attachmentIds String @default("[]")
+  captureMode String @default("snapshot")
+  answerHeading String @default("")
+  knowledgePoints String @default("[]")
+  visuals String @default("[]")
+  @@id([sourceId,itemKey])
+  @@unique([noteId,sourceId,itemKey])
+}
+model ArchiveEvent {
+  id String @id
+  payload String
+  status String @default("pending")
+  attempts Int @default(0)
+  error String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -1,0 +1,12 @@
+import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
+import {StdioServerTransport} from '@modelcontextprotocol/sdk/server/stdio.js';
+import {z} from 'zod';
+import {visualizationSchema} from './visualizations.js';
+import {knowledgePointsSchema} from './learning-content.js';
+import {baseUrl,token} from './config.js';
+import {appVersion} from '../shared/runtime.mjs';
+const server=new McpServer({name:'shizhi',version:appVersion});
+const call=async(path:string,input:any)=>{const r=await fetch(baseUrl+'/api/v1/archive/'+path,{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+token},body:JSON.stringify(input),signal:AbortSignal.timeout(25000)});const data=await r.json();if(!r.ok)return {isError:true,content:[{type:'text' as const,text:JSON.stringify(data)}]};return {content:[{type:'text' as const,text:JSON.stringify(data)}]}};
+server.registerTool('get_learning_context',{description:'读取本轮已收集原始题目、附件 ID、当前会话已有笔记，用于关联追问。仅限学习项目。缺少 turnId 时可省略，由指定会话的正式接口解析最新轮次；后续保存必须使用返回的 source.turnId，不得编造或传空值。',inputSchema:{threadId:z.string().min(1),turnId:z.string().optional()}},async(input)=>call('context',input));
+server.registerTool('record_learning_items',{description:'保存本轮准备展示的完整 Markdown 讲解（保留公式、图解代码）。captureMode=final 时结束事件会用最终回答原文同步，单题保存全文，多题按唯一二级标题 answerHeading 提取。追问引用已有 noteId 并提交本轮知识点与用户反馈依据，不能概括替代正文。最终回答中的原生 visualize 引用也可保存：path 填聊天片段，offlinePath 填同一图解的独立导出文件。最终回答引用本地 PNG/SVG/独立 HTML 产物时在 visualizations 提交原始 path，服务将完整内容内嵌保存用于离线复习。非学习消息使用 non_learning + []。不会覆盖人工修改。',inputSchema:{threadId:z.string(),turnId:z.string(),disposition:z.enum(['learning','non_learning']),items:z.array(z.object({itemKey:z.string(),noteId:z.string().optional(),title:z.string(),kind:z.enum(['question','knowledge']),subject:z.string().default('待分类'),tags:z.array(z.string()).default([]),question:z.string(),explanation:z.string(),questionNumber:z.string().optional(),attachmentIds:z.array(z.string()).default([]),captureMode:z.literal('final').default('final'),answerHeading:z.string().default(''),knowledgePoints:knowledgePointsSchema.default([]),visualizations:visualizationSchema.default([])}))}},async(input)=>call('record',input));
+await server.connect(new StdioServerTransport());

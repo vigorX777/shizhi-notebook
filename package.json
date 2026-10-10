@@ -1,0 +1,53 @@
+{
+  "name": "shizhi-notebook",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx server/index.ts",
+    "build": "tsc --noEmit && vite build",
+    "start": "tsx server/index.ts",
+    "setup": "tsx scripts/setup.ts",
+    "test": "tsx --test tests/*.test.ts",
+    "probe": "tsx scripts/probe.ts",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "install:service": "tsx scripts/install-service.ts",
+    "verify:live": "tsx scripts/verify-live.ts",
+    "doctor": "tsx scripts/doctor.ts",
+    "service:start": "node scripts/service.mjs start",
+    "service:stop": "node scripts/service.mjs stop",
+    "service:status": "node scripts/service.mjs status"
+  },
+  "dependencies": {
+    "@fastify/multipart": "^9.3.0",
+    "@fastify/static": "^8.3.0",
+    "@modelcontextprotocol/sdk": "^1.20.0",
+    "@prisma/client": "6.19.0",
+    "dompurify": "^3.4.16",
+    "fastify": "^5.6.0",
+    "fflate": "^0.8.2",
+    "katex": "^0.16.22",
+    "mermaid": "^12.1.0",
+    "prisma": "6.19.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-markdown": "^10.1.0",
+    "rehype-katex": "^7.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-math": "^6.0.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "vite": "^7.1.0"
+  },
+  "engines": {
+    "node": ">=24.12.0 <25"
+  }
+}

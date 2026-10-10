@@ -1,0 +1,17 @@
+import {resolve,join} from 'node:path';
+import {mkdirSync,existsSync,writeFileSync,readFileSync} from 'node:fs';
+import {randomBytes} from 'node:crypto';
+import {defaultDataRoot,loadMachineEnvironment} from '../shared/runtime.mjs';
+loadMachineEnvironment();
+export const root=resolve(import.meta.dirname,'..');
+export const learningRoot=join(root,'learning');
+export const dataRoot=resolve(defaultDataRoot());
+export const attachmentsRoot=join(dataRoot,'attachments');
+export const queueRoot=join(dataRoot,'queue');
+for(const dir of [dataRoot,attachmentsRoot,queueRoot])mkdirSync(dir,{recursive:true,mode:0o700});
+const tokenPath=join(dataRoot,'archive-token');
+if(!existsSync(tokenPath))writeFileSync(tokenPath,randomBytes(32).toString('hex'),{mode:0o600,flag:'wx'});
+export const token=readFileSync(tokenPath,'utf8').trim();
+export const port=Number(process.env.SHIZHI_PORT || 47831);
+export const baseUrl=`http://127.0.0.1:${port}`;
+process.env.DATABASE_URL=`file:${join(dataRoot,'notebook.db').replaceAll('\\','/')}`;
