@@ -6,7 +6,7 @@ Codex 专用学习项目正常文字／图片提问后，原始内容与完整�
 
 ## 2026-10-10 v1.0.0 封板与Windows准备
 
-已建立Git历史，GitHub私有仓库vigorX777/shizhi-notebook，版本1.0.0和v1.0.0标签固定本次基线。学习数据、个人原图、备份、凭证、本机生成配置、.local与构建产物不上传；fixtures为测试数据。WINDOWS.md提供原生Windows安装、CLI／桌面同环境、人工hooks信任、后台登录启动、doctor、ZIP迁移、真实验收及初始化提示词。
+已建立Git历史，GitHub仓库vigorX777/shizhi-notebook（随后按用户要求改为公开），版本1.0.0和v1.0.0标签固定本次基线。学习数据、个人原图、备份、凭证、本机生成配置、.local与构建产物不上传；fixtures为测试数据。WINDOWS.md提供原生Windows安装、CLI／桌面同环境、人工hooks信任、后台登录启动、doctor、ZIP迁移、真实验收及初始化提示词。
 
 补齐跨平台目录／Prisma／CLI／路径边界与Windows后台脚本，Mac既有hooks和MCP生成定义保持原样，未改信任。8项测试和构建通过，含中文空格引号路径的全新Git克隆安装、官方握手、空库静态资源、备份恢复通过，.local/v1-*为本机证据。Windows没有实机或CI通过证据，不能写为已验证。现有GitHub凭证缺workflow scope，初次workflow推送被拒；已将其作为docs/ci/verify.yml模板上传，代码推送成功，没有绕过权限或隐瞒阻碍。真实桌面剩余验收仍按原记录。
 

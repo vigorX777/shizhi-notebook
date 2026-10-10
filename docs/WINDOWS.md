@@ -22,7 +22,6 @@
    node --version
    git --version
    gh --version
-   gh auth login
    npm.cmd install -g @openai/codex@0.162.0
    codex.cmd --version
    codex.cmd login
@@ -30,7 +29,7 @@
 
    0.162.0是Mac当前验证的CLI协议基线；桌面使用当前官方版本。登录选择自己的账户，不复制Mac的auth.json、归档凭证或信任记录。
 
-仓库为私有：使用有访问权的GitHub账户。另一位用户的GitHub账户须先由仓库所有者授予访问权；安装说明不会自动邀请其他人，也不要将个人GitHub凭证交给对方。
+仓库已公开：安装和克隆无需登录GitHub或授予协作者权限。GitHub CLI仅用于后续GitHub维护，可不安装；Codex仍需登录自己的账户。
 
 本指南使用 `npm.cmd`／`codex.cmd` 避开 PowerShell 对 `.ps1` 的执行策略限制。不要为安装修改整台电脑的全局执行策略。GitHub CLI和Git是原生exe，直接运行即可。
 
@@ -41,7 +40,7 @@
 ```powershell
 New-Item -ItemType Directory -Force "$env:USERPROFILE\Source" | Out-Null
 Set-Location "$env:USERPROFILE\Source"
-gh repo clone vigorX777/shizhi-notebook
+git clone https://github.com/vigorX777/shizhi-notebook.git
 Set-Location shizhi-notebook
 git switch --detach v1.0.0
 npm.cmd ci
@@ -130,7 +129,7 @@ Windows组织策略可能禁止PowerShell启动或创建登录快捷方式。出
 
 | 现象 | 排查 |
 |---|---|
-| 无法克隆私有库 | gh auth status、GitHub账户访问权 |
+| 无法克隆仓库 | 检查Git安装及GitHub网络访问；公开克隆不需要登录 |
 | npm.ps1被策略阻止 | 使用本指南npm.cmd，不改全局策略 |
 | 找不到Codex | 重开终端；codex.cmd --version；重跑setup。独立exe可用CODEX_BIN指定绝对路径 |
 | 页面打不开／版本旧 | service:status；检查日志／端口；停止旧实例再启动。不要让npm start与后台服务同时抢同一端口 |
